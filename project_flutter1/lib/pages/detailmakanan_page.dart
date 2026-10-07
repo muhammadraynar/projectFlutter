@@ -6,31 +6,54 @@ class DetailMakananPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menerima data objek makanan dari Get.arguments
     final makanan = Get.arguments;
+
+    if (makanan == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("Detail Makanan")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Data makanan tidak ditemukan"),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => Get.back(),
+                child: const Text("Kembali ke List"),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text(makanan.namaMakanan),
         centerTitle: true,
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundColor: Colors.purple.shade100,
-                child: const Icon(
-                  Icons.fastfood,
-                  size: 50,
-                  color: Colors.purple,
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.network(
+                makanan.gambarMakanan,
+                height: 220,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 220,
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.broken_image, size: 50, color: Colors.grey),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
             Text(
               makanan.namaMakanan,
               style: const TextStyle(
@@ -40,10 +63,28 @@ class DetailMakananPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              "Harga: Rp ${makanan.hargaMakanan}",
+              "Rp ${makanan.hargaMakanan}",
               style: const TextStyle(
                 fontSize: 18,
-                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+                color: Colors.purple,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              "Deskripsi Makanan",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              makanan.deskripsi,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                height: 1.5,
               ),
             ),
           ],
